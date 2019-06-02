@@ -1,0 +1,23 @@
+prom_notify: false
+proc_title: test
+prom_notify:
+  progress_file: ./config/fx_process.cfg
+  enable_coupon: false
+  enable_wx: false
+  interval: 3
+  slience: true
+  ignore_high_price: true
+net:
+  user_agent: "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/22.0.1207.1 Safari/537.1"
+filter:
+  filter_path: ./config/pn_filter.yaml
+  jieba_userdict_path: ./config/jieba_userdict.txt
+  jieba_strip_word: ./config/jieba_strip_word.txt
+  
+only_check_connection: false
+orm:
+  conn_str: 'sqlite:///db.db'
+  echo: true
+tods:
+  gateway: https://api.open.21ds.cn/apiv1
+  apkey: ''
