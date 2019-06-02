@@ -85,9 +85,9 @@ class PromNotify(object):
         # proc title
         setproctitle(self.all_conf['proc_title'])
         # start remote manager
-        self.mm = MyManager(self.conf_file_path)
+        #self.mm = MyManager(self.conf_file_path)
         # audio module 提前创建是为了使子进程占用内存小一点
-        self.ps = PlaySound(self.conf_file_path)
+        #self.ps = PlaySound(self.conf_file_path)
         self.loop = loop
         self.net = NetManager(conf_path=self.conf_file_path, loop=self.loop, event_notify=event_notify)
         # history data
@@ -101,7 +101,7 @@ class PromNotify(object):
         if self.conf['enable_coupon']:
             self.coupon = CouponManager(self.conf_file_path, event_notify)
 
-        self.p_price = re.compile(r'\s*(?:￥|券后)?([0-9\.]+)')
+        self.p_price = re.compile(r'\s*(?:￥|券后|合)?([0-9\.]+)')
         self.p_chinese = re.compile('[\u4e00-\u9fa5]+')
 
         # 发送内容到微信
@@ -228,9 +228,9 @@ class PromNotify(object):
     def price_check(self, title, price, extra_data):
         """过滤不关注的价格区间的商品
         """
-        m = self.p_price.match(str(price))
-        if m:
-            v = float(m.group(1))
+        m = self.p_price.search(str(price))
+        if len(m) > 0:
+            v = float(m[-1])
 # #            info('got price %s from %s', v, price)
             if self.conf['ignore_high_price'] and v >= self.conf['ignore_high_price']:
                 debug('ignore high price: %s for %s %s', v, title, price)
@@ -944,7 +944,7 @@ class PromNotify(object):
             fut = [self.do_work_test_conn(), ]
         else:
 # #            fut = [self.do_work_smzdm(), self.do_work_mmb(), self.do_work_coupon(), self.do_work_jr_coupon(), self.do_work_test_conn()]
-            fut = [self.do_work_smzdm(), self.do_work_mmb(), self.do_work_test_conn(), self.do_work_sis()]
+            fut = [self.do_work_smzdm(), self.do_work_mmb(), self.do_work_test_conn()]
             if self.coupon:
                 fut.append(self.do_work_coupon())
                 fut.append(self.do_work_jr_coupon())
@@ -982,7 +982,7 @@ class ProgressData():
         self.loadCfg()
 
     def loadCfg(self):
-        self.__cfg = configparser.ConfigParser({'youhui_last_process_time': '', })
+        self.__cfg = configparser.ConfigParser({'youhui_last_process_time': 'None', })
         if os.path.exists(self.__inifile):
             self.__cfg.read_file(codecs.open(self.__inifile, 'r', self.__inifile_encoding))
             debug('progress data loaded %s', self.__inifile)

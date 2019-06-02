@@ -196,16 +196,17 @@ if __name__ == '__main__':
     def createTable(table_obj):
         conf_path = os.path.abspath('config/pn_conf.yaml')
         conf = getConf(conf_path, root_key='orm')
-        conf = conf['sis']
+        #conf = conf['sis']
         engine = create_engine(conf['conn_str'], echo=conf['echo'])
 #-#        table_obj.__table__.drop(bind=engine)
         table_obj.__table__.create(bind=engine)
 
-#-#    h = HistoryDB()
-#-#    info(pcformat(h.getRecentItems('mmb', datetime.now() + timedelta(seconds=-240))))
-#-#    info(h.existsItem('mmb', 882564))
+    h = HistoryDB()
+    info(pcformat(h.getRecentItems('mmb', datetime.now() + timedelta(seconds=-240))))
+    info(h.existsItem('mmb', 882564))
 
 # #    createTable(SisTorrent)
-    s = SisDB()
+#-#    createTable(Item)
+#-#    s = SisDB()
 #-#    embed()
-    info(s.existsRecord(666))
+#-#    info(s.existsRecord(666))
